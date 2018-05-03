@@ -1,46 +1,65 @@
 package com.example.bats.testapp;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements PagerNavigationInterface {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+	private ViewPager pager;
 
-        ViewPager pager = (ViewPager) findViewById(R.id.viewPager);
-        pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 
-    private class MyPagerAdapter extends FragmentPagerAdapter {
+		pager = (ViewPager) findViewById(R.id.viewPager);
+		pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+	}
 
-        public MyPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
+	@Override
+	public void goPrevious() {
+		pager.setCurrentItem(pager.getCurrentItem() - 1);
+	}
 
-        @Override
-        public Fragment getItem(int pos) {
-            switch(pos) {
+	@Override
+	public void goNext() {
+		pager.setCurrentItem(pager.getCurrentItem() + 1);
+	}
 
-                case 0: return FirstFragment.newInstance("FirstFragment, Instance 1");
-                case 1: return SecondFragment.newInstance("SecondFragment, Instance 1");
-                case 2: return ThirdFragment.newInstance("ThirdFragment, Instance 1");
-                case 3: return ThirdFragment.newInstance("ThirdFragment, Instance 2");
-                case 4: return ThirdFragment.newInstance("ThirdFragment, Instance 3");
-                default: return ThirdFragment.newInstance("ThirdFragment, Default");
-            }
-        }
+	private class MyPagerAdapter extends FragmentPagerAdapter {
 
-        @Override
-        public int getCount() {
-            return 5;
-        }
-    }
+		public MyPagerAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public Fragment getItem(int pos) {
+			FirstFragment firstFragment = FirstFragment.newInstance("FirstFragment, Instance 1");
+			firstFragment.setPagerNavigationInterface(MainActivity.this);
+
+			SecondFragment secondFragment = SecondFragment.newInstance("FirstFragment, Instance 1");
+			secondFragment.setPagerNavigationInterface(MainActivity.this);
+
+			ThirdFragment thirdFragment = ThirdFragment.newInstance("FirstFragment, Instance 1");
+			thirdFragment.setPagerNavigationInterface(MainActivity.this);
+
+			switch (pos) {
+				case 0:
+					return firstFragment;
+				case 1:
+					return secondFragment;
+				default:
+					return thirdFragment;
+			}
+		}
+
+		@Override
+		public int getCount() {
+			return 3;
+		}
+	}
 }

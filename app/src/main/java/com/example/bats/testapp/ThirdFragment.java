@@ -5,31 +5,57 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 /**
  * Created by bats on 5/3/18.
  */
 
-class ThirdFragment extends Fragment{
+public class ThirdFragment extends Fragment {
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.third_frag, container, false);
 
-        TextView tv = (TextView) v.findViewById(R.id.tvFragThird);
-        tv.setText(getArguments().getString("msg"));
+	public PagerNavigationInterface getPagerNavigationInterface() {
+		return pagerNavigationInterface;
+	}
 
-        return v;
-    }
+	public void setPagerNavigationInterface(PagerNavigationInterface pagerNavigationInterface) {
+		this.pagerNavigationInterface = pagerNavigationInterface;
+	}
 
-    public static ThirdFragment newInstance(String text) {
+	private PagerNavigationInterface pagerNavigationInterface;
 
-        ThirdFragment f = new ThirdFragment();
-        Bundle b = new Bundle();
-        b.putString("msg", text);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View v = inflater.inflate(R.layout.third_frag, container, false);
 
-        f.setArguments(b);
+		Button previous = (Button) v.findViewById(R.id.btn_previous);
+		Button next = (Button) v.findViewById(R.id.btn_next);
 
-        return f;
-    }
+		previous.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				pagerNavigationInterface.goPrevious();
+			}
+		});
+
+		next.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				pagerNavigationInterface.goNext();
+			}
+		});
+		return v;
+	}
+
+	public static ThirdFragment newInstance(String text) {
+
+		ThirdFragment f = new ThirdFragment();
+		Bundle b = new Bundle();
+		b.putString("msg", text);
+
+		f.setArguments(b);
+
+		return f;
+	}
 }
+
